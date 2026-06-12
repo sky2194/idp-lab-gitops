@@ -1,0 +1,100 @@
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: appenv-composition
+spec:
+  compositeTypeRef:
+    apiVersion: platform.example.com/v1alpha1
+    kind: XEnvironment
+  mode: Pipeline
+  pipeline:
+  - step: create-environment
+    functionRef:
+      name: function-patch-and-transform
+    input:
+      apiVersion: pt.fn.crossplane.io/v1beta1
+      kind: Resources
+      resources:
+
+      # 1. Create Namespace
+      - name: namespace
+        base:
+          apiVersion: kubernetes.crossplane.io/v1alpha2
+          kind: Object
+          spec:
+            forProvider:
+              manifest:
+                apiVersion: v1
+                kind: Namespace
+                metadata:
+                  labels:
+                    managed-by: crossplane
+        patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.team
+          toFieldPath: spec.forProvider.manifest.metadata.name
+          transforms:
+          - type: string
+            string:
+              type: Format
+              fmt: "team-%s"
+
+      # 2. Create ResourceQuota
+      - name: resource-quota
+        base:
+          apiVersion: kubernetes.crossplane.io/v1alpha2
+          kind: Object
+          spec:
+            forProvider:
+              manifest:
+                apiVersion: v1
+                kind: ResourceQuota
+                metadata:
+                  name: default-quota
+                spec:
+                  hard:
+                    requests.cpu: "2"
+                    requests.memory: 2Gi
+                    limits.cpu: "4"
+                    limits.memory: 4Gi
+        patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.team
+          toFieldPath: spec.forProvider.manifest.metadata.namespace
+          transforms:
+          - type: string
+            string:
+              type: Format
+              fmt: "team-%s"
+
+      # 3. Create NetworkPolicy
+      - name: network-policy
+        base:
+          apiVersion: kubernetes.crossplane.io/v1alpha2
+          kind: Object
+          spec:
+            forProvider:
+              manifest:
+                apiVersion: networking.k8s.io/v1
+                kind: NetworkPolicy
+                metadata:
+                  name: default-network-policy
+                spec:
+                  podSelector: {}
+                  policyTypes:
+                  - Ingress
+                  ingress:
+                  - from:
+                    - podSelector: {}
+                    - namespaceSelector:
+                        matchLabels:
+                          kubernetes.io/metadata.name: ingress-nginx
+        patches:
+        - type: FromCompositeFieldPath
+          fromFieldPath: spec.team
+          toFieldPath: spec.forProvider.manifest.metadata.namespace
+          transforms:
+          - type: string
+            string:
+              type: Format
+              fmt: "team-%s"

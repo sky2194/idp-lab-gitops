@@ -1,0 +1,11 @@
+apiVersion: platform.example.com/v1alpha1
+kind: AppEnvironment
+metadata:
+  name: dev2
+  namespace: default
+spec:
+  team: angular
+  size: small
+  compositeDeletePolicy: Foreground
+  compositionRef:
+    name: appenv-composition
