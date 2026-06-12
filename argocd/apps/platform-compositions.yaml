@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-compositions
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/sky2194/idp-lab-gitops
+    targetRevision: HEAD
+    path: platform/compositions
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
