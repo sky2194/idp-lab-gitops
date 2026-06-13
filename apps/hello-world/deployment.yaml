@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
       - name: hello-world
-        image: nginxdemos/hello:latest
+        image: sky2194/idp-lab-app:latest
         ports:
-        - containerPort: 80
+        - containerPort: 5000
