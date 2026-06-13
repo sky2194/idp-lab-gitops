@@ -102,8 +102,8 @@ spec:
       action: fetch:template
       input:
         url: ./skeleton/${{ parameters.language }}
-        copyWithoutTemplating:
-          - .github/workflows/ci.yaml
+        # copyWithoutTemplating:
+        #   - .github/workflows/ci.yaml
         values:
           serviceName: ${{ parameters.serviceName }}
           description: ${{ parameters.description }}
