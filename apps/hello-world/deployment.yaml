@@ -15,6 +15,6 @@ spec:
     spec:
       containers:
       - name: hello-world
-        image: sky2194/idp-lab-app:latest
+        image: sky2108/idp-lab-app:4ec8be49a3bd3363e2aef492ce80724a8b94e405
         ports:
         - containerPort: 5000
