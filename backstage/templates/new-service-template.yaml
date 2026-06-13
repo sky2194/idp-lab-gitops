@@ -1,0 +1,82 @@
+apiVersion: scaffolder.backstage.io/v1beta3
+kind: Template
+metadata:
+  name: new-service
+  title: Create a New Service
+  description: Creates a GitHub repo, CI pipeline, and ArgoCD deployment automatically
+  tags:
+    - recommended
+    - python
+spec:
+  owner: team-angular
+  type: service
+
+  # Step 1 - What the developer fills in
+  parameters:
+    - title: Service Details
+      required:
+        - serviceName
+        - teamName
+      properties:
+        serviceName:
+          title: Service Name
+          type: string
+          description: Name of the new service (lowercase, no spaces)
+          pattern: '^[a-z0-9-]+$'
+        teamName:
+          title: Team Name
+          type: string
+          description: Team that owns this service
+        description:
+          title: Description
+          type: string
+          description: Short description of the service
+
+    - title: Choose a Location
+      required:
+        - repoUrl
+      properties:
+        repoUrl:
+          title: Repository Location
+          type: string
+          ui:field: RepoUrlPicker
+          ui:options:
+            allowedHosts:
+              - github.com
+
+  # Step 2 - What happens when developer clicks Create
+  steps:
+    - id: fetch-template
+      name: Fetch Template
+      action: fetch:template
+      input:
+        url: ./skeleton
+        values:
+          serviceName: ${{ parameters.serviceName }}
+          teamName: ${{ parameters.teamName }}
+          description: ${{ parameters.description }}
+
+    - id: publish
+      name: Create GitHub Repo
+      action: publish:github
+      input:
+        allowedHosts: ['github.com']
+        description: ${{ parameters.description }}
+        repoUrl: ${{ parameters.repoUrl }}
+        defaultBranch: main
+
+    - id: register
+      name: Register in Catalog
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps['publish'].output.repoContentsUrl }}
+        catalogInfoPath: '/catalog-info.yaml'
+
+  # Step 3 - What the developer sees after creation
+  output:
+    links:
+      - title: View Repository
+        url: ${{ steps['publish'].output.remoteUrl }}
+      - title: View in Catalog
+        icon: catalog
+        entityRef: ${{ steps['register'].output.entityRef }}
