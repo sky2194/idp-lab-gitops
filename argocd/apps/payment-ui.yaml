@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/sky2194/idp-lab-gitops
+    repoURL: https://github.com/idp-lab-org/idp-lab-gitops
     targetRevision: main
     path: apps/payment-ui
   destination:
