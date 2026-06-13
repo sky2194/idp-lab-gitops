@@ -131,6 +131,7 @@ spec:
         description: ${{ parameters.description }}
         repoUrl: ${{ parameters.repoUrl }}
         defaultBranch: main
+        repoVisibility: public
 
     - id: fetch-gitops
       name: Prepare GitOps Manifests
