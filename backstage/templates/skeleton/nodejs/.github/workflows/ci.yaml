@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push Image
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: |
+            sky2194/${{ values.serviceName }}:latest
+            sky2194/${{ values.serviceName }}:${{ github.sha }}
+
+      - name: Update GitOps Repo
+        run: |
+          git clone https://x-access-token:${{ secrets.GITOPS_TOKEN }}@github.com/sky2194/idp-lab-gitops.git
+          cd idp-lab-gitops
+          sed -i "s|image: sky2194/${{ values.serviceName }}:.*|image: sky2194/${{ values.serviceName }}:${{ github.sha }}|" apps/${{ values.serviceName }}/deployment.yaml
+          git config user.email "ci@idp-lab.dev"
+          git config user.name "CI Bot"
+          git add .
+          git commit -m "Update ${{ values.serviceName }} image to ${{ github.sha }}"
+          git push
