@@ -21,14 +21,14 @@ jobs:
         with:
           push: true
           tags: |
-            sky2194/${{ values.serviceName }}:latest
-            sky2194/${{ values.serviceName }}:${{ github.sha }}
+            sky2108/${{ values.serviceName }}:latest
+            sky2108/${{ values.serviceName }}:${{ github.sha }}
 
       - name: Update GitOps Repo
         run: |
-          git clone https://x-access-token:${{ secrets.GITOPS_TOKEN }}@github.com/sky2194/idp-lab-gitops.git
+          git clone https://x-access-token:${{ secrets.GITOPS_TOKEN }}@github.com/idp-lab-org/idp-lab-gitops.git
           cd idp-lab-gitops
-          sed -i "s|image: sky2194/${{ values.serviceName }}:.*|image: sky2194/${{ values.serviceName }}:${{ github.sha }}|" apps/${{ values.serviceName }}/deployment.yaml
+          sed -i "s|image: sky2108/${{ values.serviceName }}:.*|image: sky2108/${{ values.serviceName }}:${{ github.sha }}|" apps/${{ values.serviceName }}/deployment.yaml
           git config user.email "ci@idp-lab.dev"
           git config user.name "CI Bot"
           git add .

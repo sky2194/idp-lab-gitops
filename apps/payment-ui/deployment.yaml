@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: payment-ui
-          image: sky2194/payment-ui:latest
+          image: sky2108/payment-ui:latest
           ports:
             - containerPort: 8080
           resources:

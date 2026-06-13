@@ -4,7 +4,7 @@ metadata:
   name: ${{ values.serviceName }}
   description: ${{ values.description }}
   annotations:
-    github.com/project-slug: sky2194/${{ values.serviceName }}
+    github.com/project-slug: idp-lab-org/${{ values.serviceName }}
 spec:
   type: service
   lifecycle: development
