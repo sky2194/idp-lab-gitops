@@ -56,11 +56,19 @@ spec:
           teamName: ${{ parameters.teamName }}
           description: ${{ parameters.description }}
 
+    # - id: publish
+    #   name: Create GitHub Repo
+    #   action: publish:github
+    #   input:
+    #     allowedHosts: ['github.com']
+    #     description: ${{ parameters.description }}
+    #     repoUrl: ${{ parameters.repoUrl }}
+    #     defaultBranch: main
+
     - id: publish
       name: Create GitHub Repo
       action: publish:github
       input:
-        allowedHosts: ['github.com']
         description: ${{ parameters.description }}
         repoUrl: ${{ parameters.repoUrl }}
         defaultBranch: main
