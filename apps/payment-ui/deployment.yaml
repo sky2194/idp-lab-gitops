@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-ui
+  namespace: dev
+  labels:
+    app: payment-ui
+    team: team-angular
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-ui
+  template:
+    metadata:
+      labels:
+        app: payment-ui
+        team: team-angular
+    spec:
+      containers:
+        - name: payment-ui
+          image: sky2194/payment-ui:latest
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
