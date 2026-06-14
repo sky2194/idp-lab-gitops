@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: payment-ui
-          image: sky2108/payment-ui:999ac43549af22d9b62506e5efdc203e36ac242b
+          image: sky2108/payment-ui:5ca17d74d71a12a6d8306f6d7e17d2f36d3c9b7e
           ports:
             - containerPort: 8080
           resources:
