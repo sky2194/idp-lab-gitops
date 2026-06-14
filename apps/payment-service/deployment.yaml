@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
         - name: payment-service
-          image: sky2108/payment-service:0c0b216f0182ae4b1445db1bc184a6627b20b02d
+          image: sky2108/payment-service:d21082577b2e42b21b881db417ed239b39ad3334
           ports:
             - containerPort: 8080
           resources:
